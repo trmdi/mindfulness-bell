@@ -3,7 +3,7 @@
 
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "3.1.2.10",
+  "version": "3.1.2.11",
   "description": "__MSG_extDesc__",
   "author": "__MSG_extAuthor__",
   "homepage_url": "https://github.com/trmdi/mindfulness-bell",
