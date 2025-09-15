@@ -86,3 +86,12 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     }
   })();
 });
+
+chrome.runtime.onStartup.addListener(async () => {
+  const { isBellEnabled } = await getVar(['isBellEnabled']);
+  if (isBellEnabled) {
+    chrome.action.setIcon({'path': '../icons/icon48.png'});
+  } else {
+    chrome.action.setIcon({'path': '../icons/icon48-grayscale.png'});
+  }
+})
