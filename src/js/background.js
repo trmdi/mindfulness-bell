@@ -1,14 +1,4 @@
-import { getVar, setVar, resetTimer, debug } from './utils.js';
-
-async function ensureOffscreen() {
-  if (await chrome.offscreen.hasDocument()) return;
-
-  await chrome.offscreen.createDocument({
-    url: "../views/offscreen.html",
-    reasons: ["AUDIO_PLAYBACK"],
-    justification: "for playing sound"
-  });
-}
+import { getVar, setVar, resetTimer, debug, ensureOffscreen } from './utils.js';
 
 const notificationId = 'MindfulnessBell';
 function sendNotification() {

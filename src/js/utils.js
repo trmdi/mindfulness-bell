@@ -43,3 +43,41 @@ async function getNextTimer() {
 export async function resetTimer() {
   await setVar({'timer': await getNextTimer()});
 }
+
+let creating; // A global promise to avoid concurrency issues
+export async function ensureOffscreen() {
+  //  Check all windows controlled by the service worker to see if one
+  // of them is the offscreen document with the given path
+
+  const hasOffscreenDocument = await (async () => {
+    if ('getContexts' in chrome.runtime) {
+      // chromium 116+
+      const contexts = await chrome.runtime.getContexts({
+        contextTypes: ['OFFSCREEN_DOCUMENT']
+      });
+      return Boolean(contexts.length);
+    } else {
+      const matchedClients = await clients.matchAll();
+      return matchedClients.some(client => {
+        return client.url.includes(chrome.runtime.id);
+      });
+    }
+  })();
+
+  if (hasOffscreenDocument) {
+    return;
+  }
+
+  // create offscreen document
+  if (creating) {
+    await creating;
+  } else {
+    creating = chrome.offscreen.createDocument({
+      url: '../views/offscreen.html',
+      reasons: ['AUDIO_PLAYBACK'],
+      justification: 'for playing sound',
+    });
+    await creating;
+    creating = null;
+  }
+}
