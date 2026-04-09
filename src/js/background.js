@@ -21,11 +21,9 @@ async function inviteBell() {
 }
 
 async function setBellEnabled(enabled) {
-  if (enabled === (await getVar(['isBellEnabled'])).isBellEnabled) {
-    return;
+  if (enabled !== (await getVar(['isBellEnabled'])).isBellEnabled) {
+    setVar({'isBellEnabled': enabled});
   }
-
-  setVar({'isBellEnabled': enabled});
 
   const alarm = await chrome.alarms.get('inviteBell');
   if (enabled) {
@@ -78,10 +76,9 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 chrome.runtime.onStartup.addListener(async () => {
-  const { isBellEnabled } = await getVar(['isBellEnabled']);
-  if (isBellEnabled) {
-    chrome.action.setIcon({'path': '../icons/icon48.png'});
-  } else {
-    chrome.action.setIcon({'path': '../icons/icon48-grayscale.png'});
-  }
-})
+  setBellEnabled((await getVar(['isBellEnabled'])).isBellEnabled);
+});
+
+chrome.runtime.onInstalled.addListener(async () => {
+  setBellEnabled((await getVar(['isBellEnabled'])).isBellEnabled);
+});
