@@ -53,6 +53,7 @@ async function changeVolume(){
 
 let updateTimer;
 async function setBellEnabled(event) {
+  // event is sent when clicking the Enable button
   const isBellEnabled = document.getElementById("isBellEnabledSwitch").checked;
   if (isBellEnabled) {
     if (event) await resetTimer();
@@ -65,7 +66,9 @@ async function setBellEnabled(event) {
     $('#onLayer').css('display','none');
     $('#offLayer').css('display','block');
   }
-  chrome.runtime.sendMessage({'target': 'background', 'setBellEnabled': isBellEnabled});
+  if (event) {
+    chrome.runtime.sendMessage({'target': 'background', 'setBellEnabled': isBellEnabled});
+  }
 }
 
 function updateData() {
